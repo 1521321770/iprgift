@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:c="http://www.springframework.org/schema/c" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.1.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.1.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.1.xsd">
+
+	<context:annotation-config />
+	<context:component-scan base-package="com.inspur.gift" />
+	<aop:aspectj-autoproxy />
+
+	<!-- 定义受环境影响易变的变量 -->
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="ignoreUnresolvablePlaceholders" value="true" />
+		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
+		<property name="ignoreResourceNotFound" value="true" />
+		<property name="locations">
+			<list>
+				<!-- 本地数据库开发环境配置 -->
+				<value>classpath:jdbc.properties</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- 建立数据源 -->
+	<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource">
+		<!-- 数据库驱动，我这里使用的是Mysql数据库 -->
+		<property name="driverClassName">
+			<value>${jdbc.driverClassName}</value>
+		</property>
+		
+		<!-- 数据库地址，这里也要注意一下编码，不然乱码可是很郁闷的哦！ -->
+		<property name="url">
+			<value>${jdbc.url}</value>
+		</property>
+		
+		<!-- 数据库的用户名 -->
+		<property name="username">
+			<value>${jdbc.username}</value>
+		</property>
+		
+		<!-- 数据库的密码 -->
+		<property name="password">
+			<value>${jdbc.password}</value>
+		</property>
+		
+		<property name="testOnBorrow">
+			<value>true</value>
+		</property>
+		
+		<property name="validationQuery">
+			<value>select 1</value>
+		</property>
+		
+        <!-- 设定最大空闲时间（毫秒） -->
+        <property name="maxIdle"><value>10000</value></property>
+        
+        <!--
+        	超时时间(以秒数为单位)设置超时时间有一个要注意的地方，
+			超时时间=现在的时间-程序中创建Connection的时间，
+			如果maxActive比较大，比如超过100，那么removeAbandonedTimeout
+			可以设置长一点比如180， 也就是三分钟无响应的连接进行回收，当然应用的不同设置长度也不同。
+        -->
+        <property name="removeAbandonedTimeout"><value>180</value></property>
+        
+        <!-- 在自动回收超时连接的时候打印连接的超时错误 -->
+        <property name="logAbandoned"><value>true</value></property>
+	</bean>
+
+	<!-- hibernate配置开始 -->
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="packagesToScan">
+			<list>
+				<value>com.inspur.gift.model</value>
+			</list>
+		</property>
+
+		<!-- 配置映射文件 -->
+<!-- 		
+		<property name="mappingResources">
+			<list>
+			    <value>com/gengzc/bean/Model.hbm.xml</value>  
+			</list>
+		</property>
+ -->
+		<property name="hibernateProperties">
+			<props>
+				<!-- 设置JDBC事务隔离级别. 查看java.sql.Connection来了解各个值的具体意义, 但请注意多数数据库都不支持所有的隔离级别. 取值 1, 2, 4, 8 -->
+				<!-- 1：读操作未提交（Read Uncommitted）2：读操作已提交（Read Committed）4：可重读（Repeatable Read）8：可串行化（Serializable） -->
+				<prop key="hibernate.connection.isolation">4</prop>
+				
+				<!-- 在log和console中打印出更漂亮的SQL。 取值 true | false -->
+		    	<prop key="hibernate.format_sql">true</prop>
+
+		    	<!-- 将Hibernate查询中的符号映射到SQL查询中的符号 (符号可能是函数名或常量名字). 取值 hqlLiteral=SQL_LITERAL, hqlFunction=SQLFUNC -->
+		    	<prop key="hibernate.query.substitutions">true</prop>
+
+				<!-- 允许查询缓存, 个别查询仍然需要被设置为可缓存的. 取值 true|false -->
+		    	<prop key="hibernate.cache.use_query_cache">false</prop>
+		    	
+		    	<!-- 输出所有SQL语句到控制台. 有一个另外的选择是把org.hibernate.SQL这个log category设为debug。 eg. true | false --> 
+		    	<prop key="hibernate.show_sql">false</prop>
+
+		    	<prop key="hibernate.order_inserts">true</prop>
+		    	  
+		    	<!-- 强制Hibernate按照被更新数据的主键，为SQL更新排序。这么做将减少在高并发系统中事务的死锁。 取值 true | false -->
+		    	<prop key="hibernate.order_updates">true</prop>
+		    	
+		    	<!-- 一个Hibernate Dialect类名允许Hibernate针对特定的关系数据库生成优化的SQL. 取值 full.classname.of.Dialect -->
+		    	<prop key="hibernate.dialect">org.hibernate.dialect.MySQLInnoDBDialect</prop>
+
+		    	<prop key="javax.persistence.validation.mode">none</prop> 
+
+				<!-- 在SessionFactory创建时，自动检查数据库结构，或者将数据库schema的DDL导出到数据库.
+				 	   使用 create-drop时,在显式关闭SessionFactory时，将drop掉数据库schema.
+				 	   取值 validate | update | create | create-drop --> 
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+
+				<!-- 如果开启, Hibernate将在SQL中生成有助于调试的注释信息, 默认值为false. 取值 true | false --> 
+				<prop key="hibernate.use_sql_comments">true</prop>
+
+				<prop key="hibernate.temp.use_jdbc_metadata_defaults">false</prop>
+			</props>
+		</property>
+	</bean>
+
+	<!-- Spring 配置用Hibernate来管理自己的事物，Spring配置切面来配置事物管理的类 -->
+	<bean id="txManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<tx:annotation-driven transaction-manager="txManager" proxy-target-class="true" />
+
+	<tx:advice id="txAdvice" transaction-manager="txManager">
+		<tx:attributes>
+			<tx:method name="do*" propagation="REQUIRED" rollback-for="java.lang.Exception"/>
+            <tx:method name="add*" propagation="REQUIRED" rollback-for="java.lang.Exception" />
+            <tx:method name="update*" propagation="REQUIRED" rollback-for="java.lang.Exception"/>
+            <tx:method name="del*" propagation="REQUIRED" rollback-for="java.lang.Exception"/>
+            <tx:method name="run*" propagation="REQUIRED" rollback-for="java.lang.Exception"/>
+            <tx:method name="import*" propagation="REQUIRED" rollback-for="java.lang.Exception"/>
+            <tx:method name="export*" propagation="REQUIRED" rollback-for="java.lang.Exception"/>
+            <tx:method name="get*" propagation="REQUIRED" read-only="true" rollback-for="java.lang.Exception"/>
+            <tx:method name="find*" propagation="REQUIRED" read-only="true" rollback-for="java.lang.Exception"/>
+            <tx:method name="*" propagation="SUPPORTS"/> 
+		</tx:attributes>
+	</tx:advice>
+
+	<aop:config>
+		<aop:pointcut id="transactionService" 
+			expression="execution(* com.inspur.gift.service..*.*(..))" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="transactionService" />
+	</aop:config>
+
+	<!-- hibernate配置结束 -->
+</beans>

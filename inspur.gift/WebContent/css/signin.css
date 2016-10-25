@@ -1,0 +1,147 @@
+body {
+  line-height:100%;
+  text-align:center;	
+  background-color:#ffffff;/*#06335c  #06335c repeat-x right top   baomu_bgm{ width:100%; height:100%; text-align:center; }; */
+  background:#F8F8FF;
+  background-image: url(../images/tupian/tupian.jpg);
+  background-size:1366px 680px;
+  background-repeat: no-repeat; 
+}
+/* header */
+.header{width:1000px;height:62px;position:relative;margin:0 auto;z-index:2;overflow:hidden;}
+.headerLogo{ position:absolute;top:2px;left:10px;width:390px; height:52px;}
+.headerNav{ position:absolute;top:17px;right:6px;width:124px; height:22px;text-align:right;color:#cfd0d0;}
+.loginmain{
+	height:600px;
+	position: relative;
+	min-width: 1000px;
+	border-top:1px solid #099CFF;
+	border-bottom:1px solid #2FACFF;
+}
+#mainCnt{width:1000px;height:600px;overflow:visible;margin:0 auto;position:relative;clear:both}
+#theme{height:600px;width:1000px;position:absolute;overflow:hidden;/*z-index:1;*/background-position:top right;background-repeat:no-repeat;text-align:left;top:0;left:0;}
+#theme{-webkit-transition:all 0.5s ease;-moz-transition:all 0.5s ease;-o-transition:all 0.5s ease;background:none;}
+.bg_pic{position: absolute; background:url(..//images/login_pic.png) no-repeat; width: 501px; height: 463px; left: 80px; top: 56px; cursor: pointer;}
+.ism_login{
+	width:370px;
+	height:580px;
+
+	top:90px;
+	left:50%;
+	margin-left:60px;
+	text-align:left;
+	position:absolute;
+	z-index:2;
+	background: url(../images/ism_login_bg.png) no-repeat;
+}
+.ism_login2{
+	width:370px;
+	height:480px;
+
+	top:130px;
+	left:50%;
+	margin-left:160px;
+	text-align:left;
+	position:absolute;
+	z-index:2;
+}
+
+.ism_login3{
+	width:370px;
+	height:580px;
+
+	top:90px;
+	left:50%;
+	margin-left:60px;
+	text-align:left;
+	position:absolute;
+	z-index:2;
+	background: url(../images/tupian/ism_login_bg2.png) no-repeat;
+}
+
+
+.logintit{ margin:0 auto; height:52px; max-width:1000px;}
+.form-signin {
+  max-width: 360px;
+  padding: 15px;
+  margin: 0 auto;
+}
+.logintit .inspur{ margin-top:10px;}
+.login_bg2{ margin:0 auto; margin-top:80px; width:371px; height:365px; background:url(../images/login_ba2.png) no-repeat left top;}
+.form-signin-heading{ color:#FFF; margin-top:0; font-size:20px;}
+.form-signin .form-signin-heading{
+  margin-bottom: 20px;
+  color:#626262;
+}
+.form-signin .checkbox {
+  font-weight: normal;
+  margin-bottom:10px;
+}
+.ism_login label{ color:#626262;}
+.form-signin .form-control {
+  position: relative;
+  font-size: 16px;
+  height: auto;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+.form-signin input[type="text"] {
+  margin-bottom: -1px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.form-signin input[type="password"] {
+  margin-bottom: 0px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.btn-login {
+  color: #ffffff;
+  font-weight:700;
+  background-color: #FFAC42;
+  border-color: #FF8D02;
+}
+
+.btn-login:hover,
+.btn-login:focus,
+.btn-login:active,
+.btn-login.active,
+.open .dropdown-toggle.btn-login {
+  color: #ffffff;
+  background-color: #FF9834;
+  border-color: #E58F3E;
+}
+
+.btn-primary:active,
+.btn-primary.active,
+.open .dropdown-toggle.btn-primary {
+  background-image: none;
+}
+
+.btn-login.disabled,
+.btn-login[disabled],
+fieldset[disabled] .btn-login,
+.btn-login.disabled:hover,
+.btn-login[disabled]:hover,
+fieldset[disabled] .btn-login:hover,
+.btn-login.disabled:focus,
+.btn-login[disabled]:focus,
+fieldset[disabled] .btn-login:focus,
+.btn-login.disabled:active,
+.btn-login[disabled]:active,
+fieldset[disabled] .btn-login:active,
+.btn-login.disabled.active,
+.btn-login[disabled].active,
+fieldset[disabled] .btn-login.active {
+  background-color: #FF9834;
+  border-color: #E58F3E;
+}
+.btn-long {
+  width: 100%;
+  padding-right: 0;
+  padding-left: 0;
+}
